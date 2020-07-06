@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Log.i(TAG, "Post was saved successfully");
                 binding.etDescription.setText("");
+                binding.ivPostImage.setImageResource(0);
             }
         });
     }
