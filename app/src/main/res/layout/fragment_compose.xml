@@ -7,18 +7,26 @@
     android:layout_height="match_parent"
     tools:context=".fragments.ComposeFragment">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/ivPostImage"
         android:ems="10"
+        android:minLines="3"
+        android:layout_marginTop="20dp"
         android:hint="Description..." />
 
     <Button
         android:id="@+id/btnCaptureImage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etDescription"
+        android:layout_margin="8dp"
+        android:background="#31000000"
         android:text="Take picture" />
 
     <ImageView
@@ -26,13 +34,18 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_below="@id/btnCaptureImage"
+        android:layout_marginTop="20dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivPostImage"
+        android:layout_below="@id/etDescription"
+        android:background="#31000000"
+        android:layout_marginTop="20dp"
+        android:layout_margin="8dp"
         android:text="submit" />
+    </RelativeLayout>
 
 </RelativeLayout>

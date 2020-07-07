@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:textColor="@color/colorBlack" >
 
     <item
         android:id="@+id/action_home"
-        android:icon="@drawable/ic_instagram_home_outline"
+        android:icon="@drawable/selector_home"
         android:title="Home"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_compose"
-        android:icon="@drawable/ic_instagram_new_post"
+        android:icon="@drawable/selector_compose"
         android:title="Compose"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_profile"
-        android:icon="@drawable/ic_instagram_user_outline"
+        android:icon="@drawable/selector_profile"
         android:title="Profile"
         app:showAsAction="always" />
 </menu>

@@ -50,6 +50,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(view);
         //queryPosts();
 
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.nav_logo);
+        getSupportActionBar().setDisplayUseLogoEnabled(true);
+
+        binding.bottomNavigation.setItemIconTintList(null);
+
         binding.bottomNavigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

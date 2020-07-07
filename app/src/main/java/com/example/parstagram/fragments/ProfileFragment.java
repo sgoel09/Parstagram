@@ -24,7 +24,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class ProfileFragment extends PostsFragment {
-    private static final int POST_LIMIT = 20;
+    private static final int POST_LIMIT = 5;
     private static final String TAG = "ProfileFragment";
 
     @Override
