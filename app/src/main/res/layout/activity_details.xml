@@ -12,6 +12,9 @@
         android:id="@+id/tvUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/ivProfilePic"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         tools:text="Username" />
 
@@ -19,7 +22,8 @@
         android:id="@+id/ivImage"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_below="@id/tvUsername"
+        android:layout_below="@id/ivProfilePic"
+        android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -38,5 +42,11 @@
         android:layout_below="@id/tvDescription"
         android:layout_marginTop="7dp"
         tools:text="1 day ago" />
+
+    <ImageView
+        android:id="@+id/ivProfilePic"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        tools:srcCompat="@tools:sample/avatars" />
 
 </RelativeLayout>

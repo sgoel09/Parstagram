@@ -80,6 +80,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
         public void bind(Post post) {
             ParseFile image = post.getImage();
             binding.tvUsername.setVisibility(View.GONE);
+            binding.ivProfilePic.setVisibility(View.GONE);
             binding.tvDescription.setVisibility(View.GONE);
             binding.ivImage.setVisibility(View.GONE);
             if (image != null) {

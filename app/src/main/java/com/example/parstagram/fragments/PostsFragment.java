@@ -81,6 +81,7 @@ public class PostsFragment extends Fragment {
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                adapter.clear();
                 queryPosts();
                 Log.i(TAG, "Fetched new data");
             }
@@ -92,6 +93,15 @@ public class PostsFragment extends Fragment {
         binding.rvPosts.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getContext());
         binding.rvPosts.setLayoutManager(layoutManager);
+
+        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                Log.i(TAG, "onLoadMore");
+                loadMoreData(page);
+            }
+        };
+        binding.rvPosts.addOnScrollListener(scrollListener);
 
         queryPosts();
     }
@@ -143,15 +153,6 @@ public class PostsFragment extends Fragment {
                 //adapter.notifyDataSetChanged();
                 //adapter.updateData(allPostsImmutable);
                 binding.swipeContainer.setRefreshing(false);
-
-                scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
-                    @Override
-                    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                        Log.i(TAG, "onLoadMore");
-                        loadMoreData(page);
-                    }
-                };
-                binding.rvPosts.addOnScrollListener(scrollListener);
             }
         });
     }

@@ -26,6 +26,7 @@ import com.example.parstagram.databinding.FragmentPostsBinding;
 import com.example.parstagram.databinding.FragmentProfileBinding;
 import com.google.common.collect.ImmutableList;
 import com.parse.FindCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
@@ -83,6 +84,20 @@ public class ProfileFragment extends Fragment {
 
         username = getArguments().getString("username");
         user = getArguments().getParcelable("user");
+
+        ParseQuery<ParseUser> query = ParseQuery.getQuery(ParseUser.class);
+        query.include("profilepic");
+        query.setLimit(1);
+        query.whereEqualTo("objectId", user.getObjectId());
+        query.findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> objects, ParseException e) {
+                ParseFile file = objects.get(0).getParseFile("profilepic");
+                Glide.with(getContext()).load(file.getUrl()).circleCrop().into(binding.ivProfilePic);
+            }
+        });
+
+        //user = ParseUser.getCurrentUser();
         binding.tvUsername.setText(username);
 
         allPosts = new ArrayList<>();
@@ -93,11 +108,6 @@ public class ProfileFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvPosts.setLayoutManager(layoutManager);
         //binding.tvUsername.setText(ParseUser.getCurrentUser().getUsername());
-        ParseFile profilePic = Post.getProfilePicFromUser(user);
-        if (profilePic != null) {
-            Glide.with(this).load(profilePic.getUrl()).circleCrop().into(binding.ivProfilePic);
-            binding.ivProfilePic.setVisibility(View.VISIBLE);
-        }
         queryPosts();
     }
 

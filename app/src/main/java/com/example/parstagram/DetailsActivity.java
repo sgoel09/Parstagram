@@ -39,6 +39,11 @@ public class DetailsActivity extends AppCompatActivity {
         if (image != null) {
             Glide.with(this).load(post.getImage().getUrl()).into(binding.ivImage);
         }
+        ParseFile profilePic = post.getProfilePic();
+        if (profilePic != null) {
+            Glide.with(this).load(post.getProfilePic().getUrl()).circleCrop().into(binding.ivProfilePic);
+            binding.ivProfilePic.setVisibility(View.VISIBLE);
+        }
     }
 
     private String getRelativeTime(Date date) {
