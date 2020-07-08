@@ -21,11 +21,14 @@ import com.example.parstagram.Post;
 import com.example.parstagram.PostsAdapter;
 import com.example.parstagram.R;
 import com.example.parstagram.databinding.FragmentPostsBinding;
+import com.google.common.collect.ImmutableList;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -41,7 +44,9 @@ public class PostsFragment extends Fragment {
     private EndlessRecyclerViewScrollListener scrollListener;
     protected PostsAdapter adapter;
     protected List<Post> allPosts;
+    //protected ImmutableList<Post> allPostsImmutable;
     FragmentPostsBinding binding;
+    private LinearLayoutManager layoutManager;
 
     public PostsFragment() {
         // Required empty public constructor
@@ -82,19 +87,12 @@ public class PostsFragment extends Fragment {
         });
 
         allPosts = new ArrayList<>();
+        //allPostsImmutable = ImmutableList.of();
         adapter = new PostsAdapter((Activity) getContext(), allPosts);
         binding.rvPosts.setAdapter(adapter);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        layoutManager = new LinearLayoutManager(getContext());
         binding.rvPosts.setLayoutManager(layoutManager);
-        scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
-            @Override
-            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                Log.i(TAG, "onLoadMore");
-                loadMoreData(page);
-            }
-        };
 
-        binding.rvPosts.addOnScrollListener(scrollListener);
         queryPosts();
     }
 
@@ -115,7 +113,10 @@ public class PostsFragment extends Fragment {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
                 allPosts.addAll(posts);
+                //List<Post> allPosts = allPostsImmutable;
+                //allPostsImmutable = ImmutableList.<Post>builder().addAll(allPosts).addAll(posts).build();
                 adapter.notifyDataSetChanged();
+                //adapter.updateData(allPostsImmutable);
                 binding.swipeContainer.setRefreshing(false);
             }
         });
@@ -136,10 +137,21 @@ public class PostsFragment extends Fragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-                allPosts.clear();
-                allPosts.addAll(posts);
-                adapter.notifyDataSetChanged();
+                adapter.clear();
+                adapter.addAll(posts);
+                //allPostsImmutable = ImmutableList.<Post>builder().addAll(posts).build();
+                //adapter.notifyDataSetChanged();
+                //adapter.updateData(allPostsImmutable);
                 binding.swipeContainer.setRefreshing(false);
+
+                scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
+                    @Override
+                    public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                        Log.i(TAG, "onLoadMore");
+                        loadMoreData(page);
+                    }
+                };
+                binding.rvPosts.addOnScrollListener(scrollListener);
             }
         });
     }

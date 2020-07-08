@@ -19,8 +19,11 @@ import android.view.ViewGroup;
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
 import com.example.parstagram.Post;
 import com.example.parstagram.PostsAdapter;
+import com.example.parstagram.ProfileAdapter;
 import com.example.parstagram.R;
 import com.example.parstagram.databinding.FragmentPostsBinding;
+import com.example.parstagram.databinding.FragmentProfileBinding;
+import com.google.common.collect.ImmutableList;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
@@ -32,32 +35,62 @@ import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
+ * Use the {@link ProfileFragment} factory method to
  * create an instance of this fragment.
  */
-public class ProfileFragment extends PostsFragment {
+public class ProfileFragment extends Fragment {
     private static final int POST_LIMIT = 5;
     private static final String TAG = "ProfileFragment";
-    EndlessRecyclerViewScrollListener scrollListener;
+    private ProfileAdapter adapter;
+    private String username;
+    private ParseUser user;
+    FragmentProfileBinding binding;
+    protected List<Post> allPosts;
+
+    public ProfileFragment() {
+        // Required empty public constructor
+    }
+
+    public static ProfileFragment newInstance(String username, ParseUser user) {
+        ProfileFragment fragment = new ProfileFragment();
+        Bundle args = new Bundle();
+        args.putString("username", username);
+        args.putParcelable("user", user);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        //return inflater.inflate(R.layout.fragment_posts, container, false);
+        binding = FragmentProfileBinding.inflate(getLayoutInflater(), container, false);
+        View view = binding.getRoot();
+        return view;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                queryPosts();
-                Log.i(TAG, "Fetched new data");
-            }
-        });
+        username = getArguments().getString("username");
+        user = getArguments().getParcelable("user");
+        binding.tvUsername.setText(username);
 
         allPosts = new ArrayList<>();
-        adapter = new PostsAdapter((Activity) getContext(), allPosts);
-
+        //allPostsImmutable = ImmutableList.of();
+        adapter = new ProfileAdapter((Activity) getContext(), allPosts);
+        //adapter = new PostsAdapter((Activity) getContext(), allPostsImmutable);
         binding.rvPosts.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvPosts.setLayoutManager(layoutManager);
+        //binding.tvUsername.setText(ParseUser.getCurrentUser().getUsername());
 
         queryPosts();
     }
@@ -80,17 +113,18 @@ public class ProfileFragment extends PostsFragment {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
                 allPosts.addAll(posts);
+                //allPostsImmutable = ImmutableList.copyOf(posts);
                 adapter.notifyDataSetChanged();
                 binding.swipeContainer.setRefreshing(false);
             }
         });
     }
 
-    @Override
     protected void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+        //query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
+        query.whereEqualTo(Post.KEY_USER, user);
         query.setLimit(POST_LIMIT);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
         query.findInBackground(new FindCallback<Post>() {
@@ -103,10 +137,9 @@ public class ProfileFragment extends PostsFragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-                allPosts.clear();
                 allPosts.addAll(posts);
+                //allPostsImmutable = ImmutableList.copyOf(posts);
                 adapter.notifyDataSetChanged();
-                binding.swipeContainer.setRefreshing(false);
             }
         });
     }

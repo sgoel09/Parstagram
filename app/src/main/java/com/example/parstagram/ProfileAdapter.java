@@ -6,12 +6,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ItemPostBinding;
-import com.example.parstagram.fragments.ProfileFragment;
 import com.google.common.collect.ImmutableList;
 import com.parse.ParseFile;
 
@@ -19,13 +17,13 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
+public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHolder> {
 
     private Activity context;
     private List<Post> posts;
     //private ImmutableList<Post> postsImmutable;
 
-    public PostsAdapter(Activity context, List<Post> posts) {
+    public ProfileAdapter(Activity context, List<Post> posts) {
         this.context = context;
         //this.postsImmutable = posts;
         this.posts = posts;
@@ -79,10 +77,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             binding = bind;
         }
 
-        public void bind(final Post post) {
-            binding.tvDescription.setText(post.getDescription());
-            binding.tvUsername.setText(post.getUser().getUsername());
+        public void bind(Post post) {
             ParseFile image = post.getImage();
+            binding.tvUsername.setVisibility(View.GONE);
+            binding.tvDescription.setVisibility(View.GONE);
             binding.ivImage.setVisibility(View.GONE);
             if (image != null) {
                 Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
@@ -104,9 +102,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             binding.tvUsername.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    FragmentManager fm = ((MainActivity) context).getSupportFragmentManager();
-                    ProfileFragment profileFragment = ProfileFragment.newInstance(post.getUser().getUsername(), post.getUser());
-                    fm.beginTransaction().replace(R.id.flContainer, profileFragment).commit();
+
                 }
             });
         }
