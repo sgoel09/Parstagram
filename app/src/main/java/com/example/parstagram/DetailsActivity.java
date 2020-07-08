@@ -14,6 +14,8 @@ import org.parceler.Parcels;
 
 import java.util.Date;
 
+import static com.example.parstagram.R.drawable.nav_logo;
+
 public class DetailsActivity extends AppCompatActivity {
 
     ActivityDetailsBinding binding;
@@ -26,9 +28,10 @@ public class DetailsActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
+        setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(R.drawable.nav_logo);
-        getSupportActionBar().setDisplayUseLogoEnabled(true);
+        getSupportActionBar().setLogo(nav_logo);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         post = (Post) Parcels.unwrap(getIntent().getParcelableExtra(Post.class.getSimpleName()));
 

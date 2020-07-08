@@ -8,10 +8,20 @@
     android:padding="8dp"
     tools:context=".DetailsActivity">
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:minHeight="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:titleTextColor="@color/colorBlack"
+        android:background="@color/colorWhite">
+    </androidx.appcompat.widget.Toolbar>
+
     <TextView
         android:id="@+id/tvUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@id/toolbar"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@id/ivProfilePic"
@@ -53,6 +63,7 @@
         android:id="@+id/ivProfilePic"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_below="@id/toolbar"
         android:layout_marginLeft="5dp"
         tools:srcCompat="@tools:sample/avatars" />
 
