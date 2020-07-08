@@ -48,7 +48,9 @@ public class ProfileFragment extends Fragment {
     private String username;
     private ParseUser user;
     FragmentProfileBinding binding;
-    protected List<Post> allPosts;
+    //protected List<Post> allPosts;
+    protected ImmutableList<Post> allPostsImmutable;
+
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -97,17 +99,15 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        //user = ParseUser.getCurrentUser();
         binding.tvUsername.setText(username);
 
-        allPosts = new ArrayList<>();
-        //allPostsImmutable = ImmutableList.of();
-        adapter = new ProfileAdapter((Activity) getContext(), allPosts);
-        //adapter = new PostsAdapter((Activity) getContext(), allPostsImmutable);
+        //allPosts = new ArrayList<>();
+        allPostsImmutable = ImmutableList.of();
+        //adapter = new ProfileAdapter((Activity) getContext(), allPosts);
+        adapter = new ProfileAdapter((Activity) getContext(), allPostsImmutable);
         binding.rvPosts.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvPosts.setLayoutManager(layoutManager);
-        //binding.tvUsername.setText(ParseUser.getCurrentUser().getUsername());
         queryPosts();
     }
 
@@ -128,9 +128,10 @@ public class ProfileFragment extends Fragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-                allPosts.addAll(posts);
-                //allPostsImmutable = ImmutableList.copyOf(posts);
-                adapter.notifyDataSetChanged();
+                //allPosts.addAll(posts);
+                allPostsImmutable = ImmutableList.copyOf(posts);
+                //adapter.notifyDataSetChanged();
+                adapter.updateData(allPostsImmutable);
                 binding.swipeContainer.setRefreshing(false);
             }
         });
@@ -153,9 +154,10 @@ public class ProfileFragment extends Fragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-                allPosts.addAll(posts);
-                //allPostsImmutable = ImmutableList.copyOf(posts);
-                adapter.notifyDataSetChanged();
+                //allPosts.addAll(posts);
+                allPostsImmutable = ImmutableList.copyOf(posts);
+                //adapter.notifyDataSetChanged();
+                adapter.updateData(allPostsImmutable);
             }
         });
     }

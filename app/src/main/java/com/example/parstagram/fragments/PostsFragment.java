@@ -43,8 +43,8 @@ public class PostsFragment extends Fragment {
     private static final int POST_LIMIT = 5;
     private EndlessRecyclerViewScrollListener scrollListener;
     protected PostsAdapter adapter;
-    protected List<Post> allPosts;
-    //protected ImmutableList<Post> allPostsImmutable;
+    //protected List<Post> allPosts;
+    protected ImmutableList<Post> allPostsImmutable;
     FragmentPostsBinding binding;
     private LinearLayoutManager layoutManager;
 
@@ -81,15 +81,17 @@ public class PostsFragment extends Fragment {
         binding.swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                adapter.clear();
+                //adapter.clear();
+                allPostsImmutable = ImmutableList.of();
+                adapter.updateData(allPostsImmutable);
                 queryPosts();
                 Log.i(TAG, "Fetched new data");
             }
         });
 
-        allPosts = new ArrayList<>();
-        //allPostsImmutable = ImmutableList.of();
-        adapter = new PostsAdapter((Activity) getContext(), allPosts);
+        //allPosts = new ArrayList<>();
+        allPostsImmutable = ImmutableList.of();
+        adapter = new PostsAdapter((Activity) getContext(), allPostsImmutable);
         binding.rvPosts.setAdapter(adapter);
         layoutManager = new LinearLayoutManager(getContext());
         binding.rvPosts.setLayoutManager(layoutManager);
@@ -122,11 +124,11 @@ public class PostsFragment extends Fragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-                allPosts.addAll(posts);
-                //List<Post> allPosts = allPostsImmutable;
-                //allPostsImmutable = ImmutableList.<Post>builder().addAll(allPosts).addAll(posts).build();
-                adapter.notifyDataSetChanged();
-                //adapter.updateData(allPostsImmutable);
+                //allPosts.addAll(posts);
+                List<Post> allPosts = allPostsImmutable;
+                allPostsImmutable = ImmutableList.<Post>builder().addAll(allPosts).addAll(posts).build();
+                //adapter.notifyDataSetChanged();
+                adapter.updateData(allPostsImmutable);
                 binding.swipeContainer.setRefreshing(false);
             }
         });
@@ -147,11 +149,11 @@ public class PostsFragment extends Fragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-                adapter.clear();
-                adapter.addAll(posts);
-                //allPostsImmutable = ImmutableList.<Post>builder().addAll(posts).build();
+                //adapter.clear();
+                //adapter.addAll(posts);
+                allPostsImmutable = ImmutableList.<Post>builder().addAll(posts).build();
                 //adapter.notifyDataSetChanged();
-                //adapter.updateData(allPostsImmutable);
+                adapter.updateData(allPostsImmutable);
                 binding.swipeContainer.setRefreshing(false);
             }
         });

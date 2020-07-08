@@ -23,13 +23,13 @@ import java.util.List;
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     private Activity context;
-    private List<Post> posts;
-    //private ImmutableList<Post> postsImmutable;
+    //private List<Post> posts;
+    private ImmutableList<Post> postsImmutable;
 
-    public PostsAdapter(Activity context, List<Post> posts) {
+    public PostsAdapter(Activity context, ImmutableList<Post> posts) {
         this.context = context;
-        //this.postsImmutable = posts;
-        this.posts = posts;
+        this.postsImmutable = posts;
+        //this.posts = posts;
     }
 
     @NonNull
@@ -42,31 +42,31 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Post post = posts.get(position);
-        //Post post = postsImmutable.get(position);
+        //Post post = posts.get(position);
+        Post post = postsImmutable.get(position);
         holder.bind(post);
     }
 
     @Override
     public int getItemCount() {
-        return posts.size();
-        //return postsImmutable.size();
+        //return posts.size();
+        return postsImmutable.size();
     }
 
     // Clean all elements of the recycler
-    public void clear() {
-        posts.clear();
-        notifyDataSetChanged();
-    }
-
-    // Add a list of items -- change to type used
-    public void addAll(List<Post> list) {
-        posts.addAll(list);
-        notifyDataSetChanged();
-    }
+//    public void clear() {
+//        posts.clear();
+//        notifyDataSetChanged();
+//    }
+//
+//    // Add a list of items -- change to type used
+//    public void addAll(List<Post> list) {
+//        posts.addAll(list);
+//        notifyDataSetChanged();
+//    }
 
     public void updateData(ImmutableList<Post> posts) {
-        //postsImmutable = posts;
+        postsImmutable = posts;
         notifyDataSetChanged();
     }
 
@@ -100,8 +100,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        Post post = posts.get(position);
-                        //Post post = postsImmutable.get(position);
+                        //Post post = posts.get(position);
+                        Post post = postsImmutable.get(position);
                         Intent intent = new Intent(context, DetailsActivity.class);
                         intent.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
                         context.startActivity(intent);
