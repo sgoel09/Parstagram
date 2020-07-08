@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ItemPostBinding;
+import com.example.parstagram.databinding.ItemProfileBinding;
 import com.google.common.collect.ImmutableList;
 import com.parse.ParseFile;
 
@@ -32,7 +33,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemPostBinding binding = ItemPostBinding.inflate(context.getLayoutInflater());
+        //ItemPostBinding binding = ItemPostBinding.inflate(context.getLayoutInflater());
+        ItemProfileBinding binding = ItemProfileBinding.inflate(context.getLayoutInflater());
         View view = binding.getRoot();
         return new ViewHolder(view, binding);
     }
@@ -69,9 +71,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        ItemPostBinding binding;
+        ItemProfileBinding binding;
 
-        public ViewHolder(@NonNull View itemView, ItemPostBinding bind) {
+        public ViewHolder(@NonNull View itemView, ItemProfileBinding bind) {
             super(itemView);
             bind.getRoot();
             binding = bind;
@@ -79,9 +81,9 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
 
         public void bind(Post post) {
             ParseFile image = post.getImage();
-            binding.tvUsername.setVisibility(View.GONE);
-            binding.ivProfilePic.setVisibility(View.GONE);
-            binding.tvDescription.setVisibility(View.GONE);
+            //binding.tvUsername.setVisibility(View.GONE);
+            //binding.ivProfilePic.setVisibility(View.GONE);
+            //binding.tvDescription.setVisibility(View.GONE);
             binding.ivImage.setVisibility(View.GONE);
             if (image != null) {
                 Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
@@ -98,12 +100,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ViewHold
                         intent.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
                         context.startActivity(intent);
                     }
-                }
-            });
-            binding.tvUsername.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
                 }
             });
         }

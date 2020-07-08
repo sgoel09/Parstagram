@@ -34,6 +34,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         binding.tvDescription.setText(post.getDescription());
         binding.tvUsername.setText(post.getUser().getUsername());
+        binding.tvSmallUsername.setText(post.getUser().getUsername());
         binding.tvCreatedAt.setText(getRelativeTime(post.getCreatedAt()));
         ParseFile image = post.getImage();
         if (image != null) {

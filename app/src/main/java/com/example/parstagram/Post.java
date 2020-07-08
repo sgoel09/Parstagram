@@ -1,9 +1,13 @@
 package com.example.parstagram;
 
+import android.text.format.DateUtils;
+
 import com.parse.ParseClassName;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
+
+import java.util.Date;
 
 @ParseClassName("Post")
 public class Post extends ParseObject {
@@ -50,5 +54,10 @@ public class Post extends ParseObject {
 
     public void setProfilePic(ParseFile profilePic) {
         put(KEY_PROFILE_PIC, profilePic);
+    }
+
+    protected String getRelativeTime() {
+        long mills = getCreatedAt().getTime();
+        return DateUtils.getRelativeTimeSpanString(mills).toString();
     }
 }
