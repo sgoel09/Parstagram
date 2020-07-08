@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ItemPostBinding;
+import com.example.parstagram.fragments.ProfileFragment;
 import com.parse.ParseFile;
 
 import org.parceler.Parcel;
@@ -72,8 +75,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             binding.tvDescription.setText(post.getDescription());
             binding.tvUsername.setText(post.getUser().getUsername());
             ParseFile image = post.getImage();
+            binding.ivImage.setVisibility(View.GONE);
             if (image != null) {
                 Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
+                binding.ivImage.setVisibility(View.VISIBLE);
             }
             binding.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,6 +90,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                         intent.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
                         context.startActivity(intent);
                     }
+                }
+            });
+            binding.tvUsername.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
                 }
             });
         }

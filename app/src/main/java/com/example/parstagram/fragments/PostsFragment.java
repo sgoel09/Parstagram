@@ -64,7 +64,7 @@ public class PostsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_posts, container, false);
-        binding = com.example.parstagram.databinding.FragmentPostsBinding.inflate(getLayoutInflater(), container, false);
+        binding = FragmentPostsBinding.inflate(getLayoutInflater(), container, false);
         View view = binding.getRoot();
         return view;
     }
