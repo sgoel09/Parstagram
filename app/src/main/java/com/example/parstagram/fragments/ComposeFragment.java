@@ -76,6 +76,7 @@ public class ComposeFragment extends Fragment {
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.pbLoading.setVisibility(View.VISIBLE);
                 String description = binding.etDescription.getText().toString();
                 if (description.isEmpty()) {
                     Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
@@ -172,6 +173,7 @@ public class ComposeFragment extends Fragment {
                 Log.i(TAG, "Post was saved successfully");
                 binding.etDescription.setText("");
                 binding.ivPostImage.setImageResource(0);
+                binding.pbLoading.setVisibility(View.INVISIBLE);
             }
         });
     }
