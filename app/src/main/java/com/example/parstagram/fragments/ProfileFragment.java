@@ -52,8 +52,9 @@ public class ProfileFragment extends PostsFragment {
             }
         });
 
-        allPosts = new ArrayList<Post>();
+        allPosts = new ArrayList<>();
         adapter = new PostsAdapter((Activity) getContext(), allPosts);
+
         binding.rvPosts.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvPosts.setLayoutManager(layoutManager);
@@ -62,11 +63,9 @@ public class ProfileFragment extends PostsFragment {
     }
 
     private void loadMoreData(int page) {
-        Date lastDate = allPosts.get(allPosts.size() - 1).getCreatedAt();
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
         query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
-        //query.whereLessThan(Post.KEY_CREATED_AT, lastDate);
         query.setLimit(POST_LIMIT);
         query.setSkip(POST_LIMIT*page);
         query.addDescendingOrder(Post.KEY_CREATED_AT);

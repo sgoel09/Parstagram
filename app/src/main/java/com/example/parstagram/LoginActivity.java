@@ -25,7 +25,6 @@ public class LoginActivity extends AppCompatActivity {
         final ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
-        //setContentView(R.layout.activity_login);
 
         if (ParseUser.getCurrentUser() != null) {
             goMainActivity();

@@ -81,12 +81,11 @@ public class PostsFragment extends Fragment {
             }
         });
 
-        allPosts = new ArrayList<Post>();
+        allPosts = new ArrayList<>();
         adapter = new PostsAdapter((Activity) getContext(), allPosts);
         binding.rvPosts.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.rvPosts.setLayoutManager(layoutManager);
-
         scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
@@ -96,15 +95,12 @@ public class PostsFragment extends Fragment {
         };
 
         binding.rvPosts.addOnScrollListener(scrollListener);
-
         queryPosts();
     }
 
     private void loadMoreData(int page) {
-        Date lastDate = allPosts.get(allPosts.size() - 1).getCreatedAt();
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        //query.whereLessThan(Post.KEY_CREATED_AT, lastDate);
         query.setLimit(POST_LIMIT);
         query.setSkip(POST_LIMIT*page);
         query.addDescendingOrder(Post.KEY_CREATED_AT);

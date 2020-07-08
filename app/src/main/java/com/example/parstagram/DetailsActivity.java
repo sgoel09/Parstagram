@@ -8,18 +8,11 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ActivityDetailsBinding;
-import com.example.parstagram.databinding.ActivityMainBinding;
 import com.parse.ParseFile;
 
 import org.parceler.Parcels;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
-
-import static android.text.format.DateUtils.getRelativeDateTimeString;
-import static android.text.format.DateUtils.getRelativeTimeSpanString;
 
 public class DetailsActivity extends AppCompatActivity {
 
@@ -29,7 +22,6 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_details);
         binding = ActivityDetailsBinding.inflate(getLayoutInflater());
         View view = binding.getRoot();
         setContentView(view);
