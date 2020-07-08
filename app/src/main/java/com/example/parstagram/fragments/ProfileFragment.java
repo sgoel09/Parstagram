@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
 import com.example.parstagram.Post;
 import com.example.parstagram.PostsAdapter;
@@ -26,6 +27,7 @@ import com.example.parstagram.databinding.FragmentProfileBinding;
 import com.google.common.collect.ImmutableList;
 import com.parse.FindCallback;
 import com.parse.ParseException;
+import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
@@ -91,7 +93,11 @@ public class ProfileFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvPosts.setLayoutManager(layoutManager);
         //binding.tvUsername.setText(ParseUser.getCurrentUser().getUsername());
-
+        ParseFile profilePic = Post.getProfilePicFromUser(user);
+        if (profilePic != null) {
+            Glide.with(this).load(profilePic.getUrl()).circleCrop().into(binding.ivProfilePic);
+            binding.ivProfilePic.setVisibility(View.VISIBLE);
+        }
         queryPosts();
     }
 

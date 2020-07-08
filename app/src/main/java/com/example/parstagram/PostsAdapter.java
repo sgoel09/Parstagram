@@ -10,6 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.parstagram.databinding.ItemPostBinding;
 import com.example.parstagram.fragments.ProfileFragment;
 import com.google.common.collect.ImmutableList;
@@ -87,6 +88,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             if (image != null) {
                 Glide.with(context).load(post.getImage().getUrl()).into(binding.ivImage);
                 binding.ivImage.setVisibility(View.VISIBLE);
+            }
+            ParseFile profilePic = post.getProfilePic();
+            binding.ivProfilePic.setVisibility(View.GONE);
+            if (profilePic != null) {
+                Glide.with(context).load(post.getProfilePic().getUrl()).circleCrop().into(binding.ivProfilePic);
+                binding.ivProfilePic.setVisibility(View.VISIBLE);
             }
             binding.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
