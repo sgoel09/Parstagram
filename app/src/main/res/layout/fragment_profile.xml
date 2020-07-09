@@ -30,7 +30,8 @@
                 android:id="@+id/rvPosts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/ivProfilePic" />
+                android:layout_below="@id/ivProfilePic"
+                android:layout_marginTop="10dp" />
 
             <ImageView
                 android:id="@+id/ivProfilePic"
@@ -40,6 +41,13 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="8dp"
                 tools:src="@tools:sample/avatars" />
+
+            <ImageView
+                android:id="@+id/ivAddProfilePic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvUsername"
+                android:src="@drawable/ic_baseline_add_circle" />
 
         </RelativeLayout>
 

@@ -1,6 +1,10 @@
 package com.example.parstagram.fragments;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +23,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.EndlessRecyclerViewScrollListener;
+import com.example.parstagram.MainActivity;
 import com.example.parstagram.Post;
 import com.example.parstagram.PostsAdapter;
 import com.example.parstagram.ProfileAdapter;
@@ -36,6 +42,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link ProfileFragment} factory method to
@@ -44,6 +52,7 @@ import java.util.List;
 public class ProfileFragment extends Fragment {
     private static final int POST_LIMIT = 5;
     private static final String TAG = "ProfileFragment";
+    private static final int GALLERY_REQUEST_CODE = 20;
     private ProfileAdapter adapter;
     private String username;
     private ParseUser user;
@@ -101,6 +110,18 @@ public class ProfileFragment extends Fragment {
 
         binding.tvUsername.setText(username);
 
+        if (user.getObjectId() == ParseUser.getCurrentUser().getObjectId()) {
+            binding.ivProfilePic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.i("ProfileFragment", "clicked profile pic");
+                    pickFromGallery();
+                }
+            });
+        } else {
+            binding.ivAddProfilePic.setVisibility(View.GONE);
+        }
+
         //allPosts = new ArrayList<>();
         allPostsImmutable = ImmutableList.of();
         //adapter = new ProfileAdapter((Activity) getContext(), allPosts);
@@ -109,6 +130,29 @@ public class ProfileFragment extends Fragment {
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
         binding.rvPosts.setLayoutManager(layoutManager);
         queryPosts();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode,int resultCode,Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GALLERY_REQUEST_CODE) {
+                Uri selectedImage = data.getData();
+                binding.ivProfilePic.setImageURI(selectedImage);
+        } else {
+            Log.e("ProfileFragment", "could not get data");
+        }
+    }
+
+    private void pickFromGallery() {
+        //Create an Intent with action as ACTION_PICK
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        // Sets the type as image/*. This ensures only components of type image are selected
+        intent.setType("image/*");
+        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        // Launching the Intent
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
     }
 
     private void loadMoreData(int page) {
