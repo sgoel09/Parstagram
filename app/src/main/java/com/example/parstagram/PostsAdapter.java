@@ -14,10 +14,15 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.parstagram.databinding.ItemPostBinding;
 import com.example.parstagram.fragments.ProfileFragment;
 import com.google.common.collect.ImmutableList;
+import com.parse.ParseException;
 import com.parse.ParseFile;
+import com.parse.ParseObject;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
@@ -85,6 +90,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             binding.tvUsername.setText(post.getUser().getUsername());
             binding.tvSmallUsername.setText(post.getUser().getUsername());
             binding.tvCreatedAt.setText(post.getRelativeTime());
+            //binding.tvLikes.setText(String.format("%s likes", post.getLikes().size()));
             ParseFile image = post.getImage();
             binding.ivImage.setVisibility(View.GONE);
             if (image != null) {

@@ -3,7 +3,9 @@ package com.example.parstagram.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -37,10 +39,16 @@ import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -59,6 +67,7 @@ public class ProfileFragment extends Fragment {
     FragmentProfileBinding binding;
     //protected List<Post> allPosts;
     protected ImmutableList<Post> allPostsImmutable;
+    String selectedImagePath = "" + "";
 
 
     public ProfileFragment() {
@@ -136,11 +145,29 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == GALLERY_REQUEST_CODE) {
-                Uri selectedImage = data.getData();
-                binding.ivProfilePic.setImageURI(selectedImage);
+            Uri selectedImageUri = data.getData();
+            saveProfilePic(selectedImageUri);
+            binding.ivProfilePic.setImageURI(selectedImageUri);
         } else {
             Log.e("ProfileFragment", "could not get data");
         }
+    }
+
+    private void saveProfilePic(Uri selectedImageUri) {
+        InputStream imageStream = null;
+        try {
+            imageStream = getContext().getContentResolver().openInputStream(selectedImageUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] bitmapBytes = stream.toByteArray();
+        final ParseFile newProfilePic = new ParseFile(bitmapBytes);
+        ParseUser user = ParseUser.getCurrentUser();
+        user.put("profilepic", newProfilePic);
+        user.saveInBackground();
     }
 
     private void pickFromGallery() {

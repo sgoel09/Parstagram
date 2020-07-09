@@ -7,7 +7,8 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseUser;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @ParseClassName("Post")
 public class Post extends ParseObject {
@@ -17,6 +18,8 @@ public class Post extends ParseObject {
     public static final String KEY_USER = "user";
     public static final String KEY_CREATED_AT = "createdAt";
     public static final String KEY_PROFILE_PIC = "profilepic";
+    public static final String KEY_LIKES = "likes";
+
 
     public Post() {}
 
@@ -48,12 +51,12 @@ public class Post extends ParseObject {
         return getUser().getParseFile(KEY_PROFILE_PIC);
     }
 
-    public static ParseFile getProfilePicFromUser(ParseUser user) {
-        return user.getParseFile(KEY_PROFILE_PIC);
+    public ArrayList<String> getLikes() {
+        return (ArrayList<String>) get(KEY_LIKES);
     }
 
-    public void setProfilePic(ParseFile profilePic) {
-        put(KEY_PROFILE_PIC, profilePic);
+    public void setLikes(ArrayList<String> likes) {
+        put(KEY_LIKES, likes);
     }
 
     protected String getRelativeTime() {

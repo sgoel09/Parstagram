@@ -76,7 +76,6 @@ public class ComposeFragment extends Fragment {
         binding.btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                binding.pbLoading.setVisibility(View.VISIBLE);
                 String description = binding.etDescription.getText().toString();
                 if (description.isEmpty()) {
                     Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
@@ -86,6 +85,7 @@ public class ComposeFragment extends Fragment {
                     Toast.makeText(getContext(), "There is no image", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                binding.pbLoading.setVisibility(View.VISIBLE);
                 ParseUser currentUser = ParseUser.getCurrentUser();
                 savePost(description, currentUser, photoFile);
             }
@@ -162,6 +162,7 @@ public class ComposeFragment extends Fragment {
         post.setDescription(description);
         post.setUser(currentUser);
         post.setImage(new ParseFile(photoFile));
+        Log.i("ComposeFragment", "going to save");
         post.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
