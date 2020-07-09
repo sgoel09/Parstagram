@@ -12,6 +12,19 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
 
+        <Button
+            android:id="@+id/btnGalleryImage"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pbLoading"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@id/btnCaptureImage"
+            android:background="#31000000"
+            android:text="Choose image" />
+
         <ProgressBar
             android:id="@+id/pbLoading"
             android:layout_width="wrap_content"
@@ -33,7 +46,7 @@
 
         <Button
             android:id="@+id/btnCaptureImage"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/pbLoading"
             android:layout_marginStart="8dp"

@@ -30,7 +30,10 @@ import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
@@ -44,9 +47,11 @@ public class ComposeFragment extends Fragment {
 
     public static final String TAG = "ComposeFragment";
     FragmentComposeBinding binding;
-    private File photoFile;
+    private ParseFile photoFile;
+    private File file;
     private String photoFileName = "photo.jpg";
     public static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 42;
+    public static final int GALLERY_REQUEST_CODE = 40;
 
     public ComposeFragment() {
         // Required empty public constructor
@@ -70,6 +75,13 @@ public class ComposeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 onLaunchCamera();
+            }
+        });
+
+        binding.btnGalleryImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickFromGallery();
             }
         });
 
@@ -108,13 +120,27 @@ public class ComposeFragment extends Fragment {
         return fragment;
     }
 
+    private void pickFromGallery() {
+        //Create an Intent with action as ACTION_PICK
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        // Sets the type as image/*. This ensures only components of type image are selected
+        intent.setType("image/*");
+        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        // Launching the Intent
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+    }
+
     private void onLaunchCamera() {
         // create Intent to take a picture and return control to the calling application
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Create a File reference for future access
-        photoFile = getPhotoFileUri(photoFileName);
+        //photoFile = getPhotoFileUri(photoFileName);
+        file = getPhotoFileUri(photoFileName);
+        photoFile = new ParseFile(file);
 
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileproviders", photoFile);
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileproviders", file);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
 
         // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
@@ -131,14 +157,32 @@ public class ComposeFragment extends Fragment {
         if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 // by this point we have the camera photo on disk
-                Bitmap takenImage = BitmapFactory.decodeFile(photoFile.getAbsolutePath());
+                Bitmap takenImage = BitmapFactory.decodeFile(file.getAbsolutePath());
                 // RESIZE BITMAP, see section below
                 // Load the taken image into a preview
                 binding.ivPostImage.setImageBitmap(takenImage);
             } else { // Result was a failure
                 Toast.makeText(getContext(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
+        } else if (requestCode == GALLERY_REQUEST_CODE) {
+            Uri selectedImageUri = data.getData();
+            saveImagePic(selectedImageUri);
+            binding.ivPostImage.setImageURI(selectedImageUri);
         }
+    }
+
+    private void saveImagePic(Uri selectedImageUri) {
+        InputStream imageStream = null;
+        try {
+            imageStream = getContext().getContentResolver().openInputStream(selectedImageUri);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Bitmap bmp = BitmapFactory.decodeStream(imageStream);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+        byte[] bitmapBytes = stream.toByteArray();
+        photoFile = new ParseFile(bitmapBytes);
     }
 
     // Returns the File for a photo stored on disk given the fileName
@@ -157,11 +201,11 @@ public class ComposeFragment extends Fragment {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
-    private void savePost(String description, ParseUser currentUser, File photoFile) {
+    private void savePost(String description, ParseUser currentUser, ParseFile photoFile) {
         Post post = new Post();
         post.setDescription(description);
         post.setUser(currentUser);
-        post.setImage(new ParseFile(photoFile));
+        post.setImage(photoFile);
         Log.i("ComposeFragment", "going to save");
         post.saveInBackground(new SaveCallback() {
             @Override
