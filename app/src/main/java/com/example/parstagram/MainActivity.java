@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         if (item.getItemId() == R.id.logout) {
             ParseUser.logOut();
             Intent intent = new Intent(this, LoginActivity.class);
-            finish();
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

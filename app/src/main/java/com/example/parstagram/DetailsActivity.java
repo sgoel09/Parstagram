@@ -3,22 +3,30 @@ package com.example.parstagram;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.widget.ImageViewCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ActivityDetailsBinding;
+import com.google.common.collect.ImmutableList;
+import com.parse.FindCallback;
+import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static com.example.parstagram.R.drawable.nav_logo;
 
@@ -26,6 +34,9 @@ public class DetailsActivity extends AppCompatActivity {
 
     ActivityDetailsBinding binding;
     private Post post;
+    protected CommentAdapter adapter;
+    protected ImmutableList<Comment> allCommentsImmutable;
+    private LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +70,13 @@ public class DetailsActivity extends AppCompatActivity {
             Glide.with(this).load(post.getProfilePic().getUrl()).circleCrop().into(binding.ivProfilePic);
             binding.ivProfilePic.setVisibility(View.VISIBLE);
         }
+
+        allCommentsImmutable = ImmutableList.of();
+        adapter = new CommentAdapter(this, allCommentsImmutable);
+        binding.rvComments.setAdapter(adapter);
+        layoutManager = new LinearLayoutManager(this);
+        binding.rvComments.setLayoutManager(layoutManager);
+
         binding.ivLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -76,6 +94,8 @@ public class DetailsActivity extends AppCompatActivity {
                 post.saveInBackground();
             }
         });
+
+        queryComments();
     }
 
     private void updateLikes(ArrayList<String> likes) {
@@ -98,6 +118,28 @@ public class DetailsActivity extends AppCompatActivity {
     private String getRelativeTime(Date date) {
         long mills = date.getTime();
         return DateUtils.getRelativeTimeSpanString(mills).toString();
+    }
+
+    private void queryComments() {
+        ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class);
+        query.include(Comment.KEY_USER);
+        query.include(Comment.KEY_POST);
+        query.whereEqualTo(Comment.KEY_POST, post);
+        query.addDescendingOrder(Post.KEY_CREATED_AT);
+        query.findInBackground(new FindCallback<Comment>() {
+            @Override
+            public void done(List<Comment> comments, ParseException e) {
+                if (e != null) {
+                    Log.e("DetailsActivity", "Issue with getting comments", e);
+                    return;
+                }
+                //adapter.clear();
+                //adapter.addAll(posts);
+                allCommentsImmutable = ImmutableList.<Comment>builder().addAll(comments).build();
+                //adapter.notifyDataSetChanged();
+                adapter.updateData(allCommentsImmutable);
+            }
+        });
     }
 
 }
