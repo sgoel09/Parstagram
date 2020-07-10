@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ActivityDetailsBinding;
@@ -21,6 +22,7 @@ import com.parse.ParseFile;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import org.parceler.Parcels;
 
@@ -47,7 +49,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(nav_logo);
+        //getSupportActionBar().setLogo(nav_logo);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         post = (Post) Parcels.unwrap(getIntent().getParcelableExtra(Post.class.getSimpleName()));
@@ -95,7 +97,34 @@ public class DetailsActivity extends AppCompatActivity {
             }
         });
 
+        binding.btnPostComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String body = binding.etComment.getText().toString();
+                saveComment(body);
+            }
+        });
+
         queryComments();
+    }
+
+    private void saveComment(String body) {
+        Comment comment = new Comment();
+        comment.setBody(body);
+        comment.setUser(ParseUser.getCurrentUser());
+        comment.setPost(post);
+        comment.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Log.e("DetailsActivity", "Error while saving", e);
+                    return;
+                }
+                Log.i("DetailsActivity", "Comment saved successfully");
+                binding.etComment.setText("");
+                queryComments();
+            }
+        });
     }
 
     private void updateLikes(ArrayList<String> likes) {

@@ -15,6 +15,12 @@
         android:layout_height="wrap_content"
         app:titleTextColor="@color/colorBlack"
         android:background="@color/colorWhite">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/nav_logo"/>
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout

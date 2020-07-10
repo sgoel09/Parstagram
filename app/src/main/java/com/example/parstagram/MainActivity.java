@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setLogo(nav_logo);
+        //getSupportActionBar().setLogo(nav_logo);
+        //getSupportActionBar().setIcon(nav_logo);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         //getSupportActionBar().setDisplayUseLogoEnabled(true);
 
