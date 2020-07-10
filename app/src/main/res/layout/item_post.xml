@@ -33,7 +33,7 @@
         android:id="@+id/tvDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivImage"
+        android:layout_below="@id/ivLike"
         android:layout_marginLeft="6dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/tvSmallUsername"
@@ -52,7 +52,7 @@
         android:id="@+id/tvSmallUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivImage"
+        android:layout_below="@id/ivLike"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:textSize="14dp"
@@ -69,5 +69,24 @@
         android:layout_marginBottom="12dp"
         android:textColor="#9F000000"
         tools:text="1 day ago" />
+
+    <ImageView
+        android:id="@+id/ivLike"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivImage"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        app:srcCompat="@drawable/ic_baseline_favorite" />
+
+    <TextView
+        android:id="@+id/tvLikes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivImage"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@id/ivLike"
+        tools:text="5 likes" />
 
 </RelativeLayout>

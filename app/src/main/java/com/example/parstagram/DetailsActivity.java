@@ -106,7 +106,11 @@ public class DetailsActivity extends AppCompatActivity {
             csl = AppCompatResources.getColorStateList(this, R.color.colorGray);
         }
         ImageViewCompat.setImageTintList(binding.ivLike, csl);
-        binding.tvLikes.setText(String.format("%s likes", likes.size()));
+        if (likes.size() == 1) {
+            binding.tvLikes.setText(String.format("1 like"));
+        } else {
+            binding.tvLikes.setText(String.format("%s likes", likes.size()));
+        }
     }
 
     private void setLikesNone() {

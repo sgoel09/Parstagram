@@ -2,10 +2,13 @@ package com.example.parstagram;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -90,7 +93,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             binding.tvUsername.setText(post.getUser().getUsername());
             binding.tvSmallUsername.setText(post.getUser().getUsername());
             binding.tvCreatedAt.setText(post.getRelativeTime());
-            //binding.tvLikes.setText(String.format("%s likes", post.getLikes().size()));
             ParseFile image = post.getImage();
             binding.ivImage.setVisibility(View.GONE);
             if (image != null) {
@@ -102,6 +104,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             if (profilePic != null) {
                 Glide.with(context).load(post.getProfilePic().getUrl()).circleCrop().into(binding.ivProfilePic);
                 binding.ivProfilePic.setVisibility(View.VISIBLE);
+            }
+            if (post.getLikes() != null) {
+                updateLikes(post.getLikes());
+            } else {
+                setLikesNone();
             }
             binding.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -124,6 +131,27 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                     fm.beginTransaction().replace(R.id.flContainer, profileFragment).commit();
                 }
             });
+        }
+
+        private void updateLikes(ArrayList<String> likes) {
+            ColorStateList csl;
+            if (likes.contains(ParseUser.getCurrentUser().getUsername())) {
+                csl = AppCompatResources.getColorStateList(context, R.color.colorRed);
+            } else {
+                csl = AppCompatResources.getColorStateList(context, R.color.colorGray);
+            }
+            ImageViewCompat.setImageTintList(binding.ivLike, csl);
+            if (likes.size() == 1) {
+                binding.tvLikes.setText(String.format("1 like"));
+            } else {
+                binding.tvLikes.setText(String.format("%s likes", likes.size()));
+            }
+        }
+
+        private void setLikesNone() {
+            ColorStateList csl = AppCompatResources.getColorStateList(context, R.color.colorGray);
+            ImageViewCompat.setImageTintList(binding.ivLike, csl);
+            binding.tvLikes.setText("0 likes");
         }
     }
 }
