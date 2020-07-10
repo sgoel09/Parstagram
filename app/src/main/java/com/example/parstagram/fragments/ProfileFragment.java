@@ -81,6 +81,7 @@ public class ProfileFragment extends Fragment {
 
         ((MainActivity) getContext()).getSupportActionBar().setLogo(null);
 
+        binding.pbLoading.setVisibility(View.VISIBLE);
         username = getArguments().getString("username");
         user = getArguments().getParcelable("user");
 
@@ -203,6 +204,7 @@ public class ProfileFragment extends Fragment {
                 }
                 allPostsImmutable = ImmutableList.copyOf(posts);
                 adapter.updateData(allPostsImmutable);
+                binding.pbLoading.setVisibility(View.GONE);
             }
         });
     }

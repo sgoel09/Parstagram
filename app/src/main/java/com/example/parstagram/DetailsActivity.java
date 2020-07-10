@@ -3,6 +3,7 @@ package com.example.parstagram;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.widget.ImageViewCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.res.ColorStateList;
@@ -13,6 +14,7 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ActivityDetailsBinding;
+import com.example.parstagram.fragments.ProfileFragment;
 import com.google.common.collect.ImmutableList;
 import com.parse.FindCallback;
 import com.parse.ParseException;
