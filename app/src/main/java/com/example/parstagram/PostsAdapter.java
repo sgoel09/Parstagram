@@ -1,8 +1,10 @@
 package com.example.parstagram;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -88,17 +90,12 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
                 Glide.with(context).load(post.getProfilePic().getUrl()).circleCrop().into(binding.ivProfilePic);
                 binding.ivProfilePic.setVisibility(View.VISIBLE);
             }
-            if (post.getLikes() != null) {
-                updateLikes(post.getLikes());
-            } else {
-                setLikesNone();
-            }
+            updateLikes(post.getLikes());
             binding.ivImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     int position = getAdapterPosition();
                     if (position != RecyclerView.NO_POSITION) {
-                        //Post post = posts.get(position);
                         Post post = postsImmutable.get(position);
                         Intent intent = new Intent(context, DetailsActivity.class);
                         intent.putExtra(Post.class.getSimpleName(), Parcels.wrap(post));
@@ -134,17 +131,21 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         }
 
         private void updateLikes(ArrayList<String> likes) {
-            ColorStateList csl;
-            if (likes.contains(ParseUser.getCurrentUser().getUsername())) {
-                csl = AppCompatResources.getColorStateList(context, R.color.colorRed);
+            if (likes == null) {
+                setLikesNone();
             } else {
-                csl = AppCompatResources.getColorStateList(context, R.color.colorGray);
-            }
-            ImageViewCompat.setImageTintList(binding.ivLike, csl);
-            if (likes.size() == 1) {
-                binding.tvLikes.setText(String.format("1 like"));
-            } else {
-                binding.tvLikes.setText(String.format("%s likes", likes.size()));
+                ColorStateList csl;
+                if (likes.contains(ParseUser.getCurrentUser().getUsername())) {
+                    csl = AppCompatResources.getColorStateList(context, R.color.colorRed);
+                } else {
+                    csl = AppCompatResources.getColorStateList(context, R.color.colorGray);
+                }
+                ImageViewCompat.setImageTintList(binding.ivLike, csl);
+                if (likes.size() == 1) {
+                    binding.tvLikes.setText(String.format("1 like"));
+                } else {
+                    binding.tvLikes.setText(String.format("%s likes", likes.size()));
+                }
             }
         }
 

@@ -11,7 +11,7 @@
         android:id="@+id/tvUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="6dp"
         android:layout_toRightOf="@id/ivProfilePic"
         android:padding="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -99,5 +99,14 @@
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"
         app:srcCompat="@drawable/ufi_save" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="5dp"
+        app:srcCompat="@drawable/media_option_button" />
 
 </RelativeLayout>
