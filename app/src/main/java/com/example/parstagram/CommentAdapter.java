@@ -1,33 +1,25 @@
 package com.example.parstagram;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ItemCommentBinding;
-import com.example.parstagram.databinding.ItemPostBinding;
-import com.example.parstagram.fragments.ProfileFragment;
 import com.google.common.collect.ImmutableList;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 
-import org.parceler.Parcels;
 
 public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private Activity context;
-    //private List<Post> posts;
     private ImmutableList<Comment> commentsImmutable;
 
     public CommentAdapter(Activity context, ImmutableList<Comment> comments) {
         this.context = context;
         this.commentsImmutable = comments;
-        //this.posts = posts;
     }
 
     @NonNull
@@ -46,7 +38,6 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        //return posts.size();
         return commentsImmutable.size();
     }
 

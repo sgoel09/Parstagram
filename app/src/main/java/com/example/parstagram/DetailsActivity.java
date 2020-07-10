@@ -5,13 +5,11 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.widget.ImageViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.app.Activity;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ActivityDetailsBinding;
@@ -19,7 +17,6 @@ import com.google.common.collect.ImmutableList;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseFile;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
@@ -30,15 +27,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.example.parstagram.R.drawable.nav_logo;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    ActivityDetailsBinding binding;
     private Post post;
+    private LinearLayoutManager layoutManager;
     protected CommentAdapter adapter;
     protected ImmutableList<Comment> allCommentsImmutable;
-    private LinearLayoutManager layoutManager;
+    ActivityDetailsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +45,6 @@ public class DetailsActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //getSupportActionBar().setLogo(nav_logo);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         post = (Post) Parcels.unwrap(getIntent().getParcelableExtra(Post.class.getSimpleName()));
@@ -166,13 +161,9 @@ public class DetailsActivity extends AppCompatActivity {
                     Log.e("DetailsActivity", "Issue with getting comments", e);
                     return;
                 }
-                //adapter.clear();
-                //adapter.addAll(posts);
                 allCommentsImmutable = ImmutableList.<Comment>builder().addAll(comments).build();
-                //adapter.notifyDataSetChanged();
                 adapter.updateData(allCommentsImmutable);
             }
         });
     }
-
 }

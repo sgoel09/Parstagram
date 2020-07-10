@@ -2,10 +2,8 @@ package com.example.parstagram.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,44 +11,28 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.example.parstagram.EndlessRecyclerViewScrollListener;
 import com.example.parstagram.MainActivity;
 import com.example.parstagram.Post;
-import com.example.parstagram.PostsAdapter;
 import com.example.parstagram.ProfileAdapter;
-import com.example.parstagram.R;
-import com.example.parstagram.databinding.FragmentPostsBinding;
 import com.example.parstagram.databinding.FragmentProfileBinding;
 import com.google.common.collect.ImmutableList;
 import com.parse.FindCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Objects;
-
-import static android.app.Activity.RESULT_OK;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,11 +46,8 @@ public class ProfileFragment extends Fragment {
     private ProfileAdapter adapter;
     private String username;
     private ParseUser user;
-    FragmentProfileBinding binding;
-    //protected List<Post> allPosts;
     protected ImmutableList<Post> allPostsImmutable;
-    String selectedImagePath = "" + "";
-
+    FragmentProfileBinding binding;
 
     public ProfileFragment() {
         // Required empty public constructor
@@ -91,8 +70,6 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        //return inflater.inflate(R.layout.fragment_posts, container, false);
         binding = FragmentProfileBinding.inflate(getLayoutInflater(), container, false);
         View view = binding.getRoot();
         return view;
@@ -101,6 +78,8 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ((MainActivity) getContext()).getSupportActionBar().setLogo(null);
 
         username = getArguments().getString("username");
         user = getArguments().getParcelable("user");
@@ -131,9 +110,7 @@ public class ProfileFragment extends Fragment {
             binding.ivAddProfilePic.setVisibility(View.GONE);
         }
 
-        //allPosts = new ArrayList<>();
         allPostsImmutable = ImmutableList.of();
-        //adapter = new ProfileAdapter((Activity) getContext(), allPosts);
         adapter = new ProfileAdapter((Activity) getContext(), allPostsImmutable);
         binding.rvPosts.setAdapter(adapter);
         GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
@@ -211,7 +188,6 @@ public class ProfileFragment extends Fragment {
     protected void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
-        //query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
         query.whereEqualTo(Post.KEY_USER, user);
         query.setLimit(POST_LIMIT);
         query.addDescendingOrder(Post.KEY_CREATED_AT);
@@ -225,9 +201,7 @@ public class ProfileFragment extends Fragment {
                 for (Post post : posts) {
                     Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
                 }
-                //allPosts.addAll(posts);
                 allPostsImmutable = ImmutableList.copyOf(posts);
-                //adapter.notifyDataSetChanged();
                 adapter.updateData(allPostsImmutable);
             }
         });
