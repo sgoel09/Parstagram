@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //getSupportActionBar().setLogo(nav_logo);
+        getSupportActionBar().setLogo(R.drawable.ic_baseline_photo_camera);
         //getSupportActionBar().setIcon(nav_logo);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         //getSupportActionBar().setDisplayUseLogoEnabled(true);

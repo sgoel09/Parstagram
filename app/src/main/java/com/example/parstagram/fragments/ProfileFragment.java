@@ -136,7 +136,7 @@ public class ProfileFragment extends Fragment {
         //adapter = new ProfileAdapter((Activity) getContext(), allPosts);
         adapter = new ProfileAdapter((Activity) getContext(), allPostsImmutable);
         binding.rvPosts.setAdapter(adapter);
-        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 2);
+        GridLayoutManager layoutManager = new GridLayoutManager(getContext(), 3);
         binding.rvPosts.setLayoutManager(layoutManager);
         queryPosts();
     }

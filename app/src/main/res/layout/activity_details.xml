@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    android:padding="8dp"
     tools:context=".DetailsActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -20,9 +19,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/nav_logo"/>
+            android:src="@drawable/nav_logo" />
 
     </androidx.appcompat.widget.Toolbar>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/toolbar"
+        android:background="?android:attr/listDivider" />
 
     <TextView
         android:id="@+id/tvUsername"
@@ -30,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbar"
         android:layout_marginLeft="10dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="18dp"
         android:layout_toRightOf="@id/ivProfilePic"
         android:textSize="18dp"
         android:textStyle="bold"
@@ -72,6 +78,7 @@
         android:layout_height="50dp"
         android:layout_below="@id/toolbar"
         android:layout_marginLeft="5dp"
+        android:layout_marginTop="8dp"
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
@@ -120,9 +127,9 @@
         android:background="@drawable/edit_text_shape"
         android:cursorVisible="true"
         android:hint="Add a comment..."
-        android:windowSoftInputMode="adjustPan"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"/>
+        android:paddingRight="10dp"
+        android:windowSoftInputMode="adjustPan" />
 
     <Button
         android:id="@+id/btnPostComment"
@@ -135,7 +142,7 @@
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
         android:background="@android:color/transparent"
-        android:textColor="#2196F3"
-        android:text="post" />
+        android:text="post"
+        android:textColor="#2196F3" />
 
 </RelativeLayout>

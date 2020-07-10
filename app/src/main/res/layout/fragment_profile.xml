@@ -30,7 +30,7 @@
                 android:id="@+id/rvPosts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/ivProfilePic"
+                android:layout_below="@id/ivAddProfilePic"
                 android:layout_marginTop="10dp" />
 
             <ImageView
@@ -47,6 +47,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvUsername"
+                android:layout_marginTop="-5dp"
+                android:layout_marginEnd="-10dp"
+                android:layout_toStartOf="@+id/tvUsername"
                 android:src="@drawable/ic_baseline_add_circle" />
 
         </RelativeLayout>
