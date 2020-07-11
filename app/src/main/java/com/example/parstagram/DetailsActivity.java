@@ -3,7 +3,6 @@ package com.example.parstagram;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.widget.ImageViewCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.content.res.ColorStateList;
@@ -14,7 +13,6 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 import com.example.parstagram.databinding.ActivityDetailsBinding;
-import com.example.parstagram.fragments.ProfileFragment;
 import com.google.common.collect.ImmutableList;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -29,7 +27,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * The details activity of a post.
+ */
 public class DetailsActivity extends AppCompatActivity {
 
     private Post post;
@@ -38,6 +38,7 @@ public class DetailsActivity extends AppCompatActivity {
     protected ImmutableList<Comment> allCommentsImmutable;
     ActivityDetailsBinding binding;
 
+    /** Set view binding, update the views with the post information, and set click listeners for the like icon and comment button. */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +106,7 @@ public class DetailsActivity extends AppCompatActivity {
         queryComments();
     }
 
+    /** Creates and saves a comment object. */
     private void saveComment(String body) {
         Comment comment = new Comment();
         comment.setBody(body);
@@ -124,6 +126,7 @@ public class DetailsActivity extends AppCompatActivity {
         });
     }
 
+    /** Update the like icon and number based on the likes array. */
     private void updateLikes(ArrayList<String> likes) {
         ColorStateList csl;
         if (likes.contains(ParseUser.getCurrentUser().getUsername())) {
@@ -139,17 +142,20 @@ public class DetailsActivity extends AppCompatActivity {
         }
     }
 
+    /** Sets like icon and number when there are none. */
     private void setLikesNone() {
         ColorStateList csl = AppCompatResources.getColorStateList(this, R.color.colorGray);
         ImageViewCompat.setImageTintList(binding.ivLike, csl);
         binding.tvLikes.setText("0 likes");
     }
 
+    /** @return the relative time of the post. */
     private String getRelativeTime(Date date) {
         long mills = date.getTime();
         return DateUtils.getRelativeTimeSpanString(mills).toString();
     }
 
+    /** Query all the comments of the post. */
     private void queryComments() {
         ParseQuery<Comment> query = ParseQuery.getQuery(Comment.class);
         query.include(Comment.KEY_USER);

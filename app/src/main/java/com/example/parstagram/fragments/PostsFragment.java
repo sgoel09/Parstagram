@@ -29,10 +29,8 @@ import com.parse.ParseQuery;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link PostsFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+ * Fragment in which user can view all posts and corresponding information.
+ * */
 public class PostsFragment extends Fragment {
 
     private static final String TAG = "PostsFragment";
@@ -43,30 +41,24 @@ public class PostsFragment extends Fragment {
     protected ImmutableList<Post> allPostsImmutable;
     FragmentPostsBinding binding;
 
-    public PostsFragment() {
-        // Required empty public constructor
-    }
+    /** Required empty constructor */
+    public PostsFragment() {}
 
-    public static PostsFragment newInstance(String param1, String param2) {
-        PostsFragment fragment = new PostsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    /** Execute onCreate to create the fragment. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /** Define and return the view for this fragment. */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPostsBinding.inflate(getLayoutInflater(), container, false);
         View view = binding.getRoot();
         return view;
     }
 
+    /** On creation, set refresh listener, posts adapter, and scroll listener. */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -97,16 +89,16 @@ public class PostsFragment extends Fragment {
             }
         };
         binding.rvPosts.addOnScrollListener(scrollListener);
-
-        //queryPosts();
     }
 
+    /** When the fragment resumes, query posts again to update information. */
     @Override
     public void onResume() {
         super.onResume();
         queryPosts();
     }
 
+    /** Make another query to get more posts, based on the page the user is on, and notify the adapter. */
     private void loadMoreData(int page) {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
@@ -131,6 +123,7 @@ public class PostsFragment extends Fragment {
         });
     }
 
+    /** Query the first set of posts from the database and notify the adapter. */
     private void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);

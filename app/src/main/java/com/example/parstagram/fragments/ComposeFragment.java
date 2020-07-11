@@ -32,14 +32,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Objects;
 
 import static android.app.Activity.RESULT_OK;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ComposeFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Fragment in which user can compose and submit a post by either uploading an image from camera roll or by taking a new picture.
  */
 public class ComposeFragment extends Fragment {
 
@@ -52,18 +49,18 @@ public class ComposeFragment extends Fragment {
     FragmentComposeBinding binding;
 
 
-    public ComposeFragment() {
-        // Required empty public constructor
-    }
+    /** Required empty constructor */
+    public ComposeFragment() {}
 
+    /** Define and return the view for this fragment. */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentComposeBinding.inflate(getLayoutInflater(), container, false);
         View view = binding.getRoot();
         return view;
     }
 
+    /** On creation, set click listeners for choosing an image, taking a picture, and submitting a post. */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -93,42 +90,7 @@ public class ComposeFragment extends Fragment {
 
     }
 
-    private void submitPost() {
-        String description = binding.etDescription.getText().toString();
-        if (description.isEmpty()) {
-            Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (photoFile == null || binding.ivPostImage.getDrawable() == null) {
-            Toast.makeText(getContext(), "There is no image", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        binding.pbLoading.setVisibility(View.VISIBLE);
-        ParseUser currentUser = ParseUser.getCurrentUser();
-        savePost(description, currentUser, photoFile);
-    }
-
-    private void pickFromGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        String[] mimeTypes = {"image/jpeg", "image/png"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        startActivityForResult(intent, GALLERY_REQUEST_CODE);
-    }
-
-    private void onLaunchCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        file = getPhotoFileUri(photoFileName);
-        photoFile = new ParseFile(file);
-
-        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileproviders", file);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
-
-        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
-            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        }
-    }
-
+    /** Depending on the request code, get the data and set the image view to the new picture. */
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -146,6 +108,46 @@ public class ComposeFragment extends Fragment {
         }
     }
 
+    /** Update views to let user know that post is submitted. */
+    private void submitPost() {
+        String description = binding.etDescription.getText().toString();
+        if (description.isEmpty()) {
+            Toast.makeText(getContext(), "Description cannot be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (photoFile == null || binding.ivPostImage.getDrawable() == null) {
+            Toast.makeText(getContext(), "There is no image", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        binding.pbLoading.setVisibility(View.VISIBLE);
+        ParseUser currentUser = ParseUser.getCurrentUser();
+        savePost(description, currentUser, photoFile);
+    }
+
+    /** Create an intent and start the gallery activity */
+    private void pickFromGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        String[] mimeTypes = {"image/jpeg", "image/png"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+    }
+
+    /** Create an intent and launch the camera */
+    private void onLaunchCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        file = getPhotoFileUri(photoFileName);
+        photoFile = new ParseFile(file);
+
+        Uri fileProvider = FileProvider.getUriForFile(getContext(), "com.codepath.fileproviders", file);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+
+    /** Defines the field photoFile to be a ParseFile represented by the imague uri parameter. */
     private void saveImagePic(Uri selectedImageUri) {
         InputStream imageStream = null;
         try {
@@ -160,7 +162,8 @@ public class ComposeFragment extends Fragment {
         photoFile = new ParseFile(bitmapBytes);
     }
 
-    // Returns the File for a photo stored on disk given the fileName
+    /** Returns the File for a photo stored on disk given the fileName
+     * @return File object of that photo */
     public File getPhotoFileUri(String fileName) {
         File mediaStorageDir = new File(getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES), TAG);
         if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
@@ -169,6 +172,7 @@ public class ComposeFragment extends Fragment {
         return new File(mediaStorageDir.getPath() + File.separator + fileName);
     }
 
+    /** Creates a new post object and saves the post with inputted information. */
     private void savePost(String description, ParseUser currentUser, ParseFile photoFile) {
         Post post = new Post();
         post.setDescription(description);

@@ -1,15 +1,10 @@
 package com.example.parstagram;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
@@ -28,16 +23,21 @@ import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter for the list of posts.
+ * */
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
     private Activity context;
     private ImmutableList<Post> postsImmutable;
 
+    /** Assign the context and list of data of the adapter. */
     public PostsAdapter(Activity context, ImmutableList<Post> posts) {
         this.context = context;
         this.postsImmutable = posts;
     }
 
+    /** Define and return the view for this adapter. */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -46,33 +46,38 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
         return new ViewHolder(view, binding);
     }
 
+    /** Get the post at the current position and bind the image views of the item. */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Post post = postsImmutable.get(position);
         holder.bind(post);
     }
 
+    /** @return the number of items. */
     @Override
     public int getItemCount() {
         return postsImmutable.size();
     }
 
-
+    /** Update the data and notify the adapter. */
     public void updateData(ImmutableList<Post> posts) {
         postsImmutable = posts;
         notifyDataSetChanged();
     }
 
+    /** The ViewHolder for the adapter. */
     class ViewHolder extends RecyclerView.ViewHolder {
 
         ItemPostBinding binding;
 
+        /** Define the view binding for the adapter. */
         public ViewHolder(@NonNull View itemView, ItemPostBinding bind) {
             super(itemView);
             bind.getRoot();
             binding = bind;
         }
 
+        /** Bind all views of a single item with data from the item and set on click listeners for image, username, and like icon. */
         public void bind(final Post post) {
             binding.tvDescription.setText(post.getDescription());
             binding.tvUsername.setText(post.getUser().getUsername());
@@ -130,6 +135,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             });
         }
 
+        /** Update the like icon and number based on the likes array. */
         private void updateLikes(ArrayList<String> likes) {
             if (likes == null) {
                 setLikesNone();
@@ -149,6 +155,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.ViewHolder> 
             }
         }
 
+        /** Sets like icon and number when there are none. */
         private void setLikesNone() {
             ColorStateList csl = AppCompatResources.getColorStateList(context, R.color.colorGray);
             ImageViewCompat.setImageTintList(binding.ivLike, csl);

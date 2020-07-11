@@ -35,9 +35,7 @@ import java.io.InputStream;
 import java.util.List;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment} factory method to
- * create an instance of this fragment.
+ * Fragment in which user can view the profile of a user, including all their posts.
  */
 public class ProfileFragment extends Fragment {
     private static final int POST_LIMIT = 5;
@@ -49,10 +47,10 @@ public class ProfileFragment extends Fragment {
     protected ImmutableList<Post> allPostsImmutable;
     FragmentProfileBinding binding;
 
-    public ProfileFragment() {
-        // Required empty public constructor
-    }
+    /** Required empty constructor */
+    public ProfileFragment() {}
 
+    /** On a new instance, pass in the username and user whose profile will be shown. */
     public static ProfileFragment newInstance(String username, ParseUser user) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -62,19 +60,21 @@ public class ProfileFragment extends Fragment {
         return fragment;
     }
 
+    /** Execute onCreate to create the fragment. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /** Define and return the view for this fragment. */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentProfileBinding.inflate(getLayoutInflater(), container, false);
         View view = binding.getRoot();
         return view;
     }
 
+    /** On creation, update views with user information, set profile adapter, and click listener if it is the current user's profile. */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -119,6 +119,7 @@ public class ProfileFragment extends Fragment {
         queryPosts();
     }
 
+    /** Get the data and set the profile picture image view to the selected one. */
     @Override
     public void onActivityResult(int requestCode,int resultCode,Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -131,6 +132,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
+    /** Defines the field photoFile to be a ParseFile represented by the imague uri parameter. */
     private void saveProfilePic(Uri selectedImageUri) {
         InputStream imageStream = null;
         try {
@@ -148,44 +150,16 @@ public class ProfileFragment extends Fragment {
         user.saveInBackground();
     }
 
+    /** Create an intent and start the gallery activity */
     private void pickFromGallery() {
-        //Create an Intent with action as ACTION_PICK
         Intent intent = new Intent(Intent.ACTION_PICK);
-        // Sets the type as image/*. This ensures only components of type image are selected
         intent.setType("image/*");
-        //We pass an extra array with the accepted mime types. This will ensure only components with these MIME types as targeted.
         String[] mimeTypes = {"image/jpeg", "image/png"};
         intent.putExtra(Intent.EXTRA_MIME_TYPES,mimeTypes);
-        // Launching the Intent
         startActivityForResult(intent, GALLERY_REQUEST_CODE);
     }
 
-    private void loadMoreData(int page) {
-        ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
-        query.include(Post.KEY_USER);
-        query.whereEqualTo(Post.KEY_USER, ParseUser.getCurrentUser());
-        query.setLimit(POST_LIMIT);
-        query.setSkip(POST_LIMIT*page);
-        query.addDescendingOrder(Post.KEY_CREATED_AT);
-        query.findInBackground(new FindCallback<Post>() {
-            @Override
-            public void done(List<Post> posts, ParseException e) {
-                if (e != null) {
-                    Log.e(TAG, "Issue with getting posts", e);
-                    return;
-                }
-                for (Post post : posts) {
-                    Log.i(TAG, "Post: " + post.getDescription() + ", username: " + post.getUser().getUsername());
-                }
-                //allPosts.addAll(posts);
-                allPostsImmutable = ImmutableList.copyOf(posts);
-                //adapter.notifyDataSetChanged();
-                adapter.updateData(allPostsImmutable);
-                binding.swipeContainer.setRefreshing(false);
-            }
-        });
-    }
-
+    /** Query the first set of posts from the database and notify the adapter. */
     protected void queryPosts() {
         ParseQuery<Post> query = ParseQuery.getQuery(Post.class);
         query.include(Post.KEY_USER);
